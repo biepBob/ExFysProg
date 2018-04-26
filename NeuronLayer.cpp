@@ -1,7 +1,7 @@
 #include "NeuronLayer.h"
 
 layer::layer(vector<vector<fp> > LayerWeights, vector<fp> LayerBias){
-    //Neurons.resize(LayerWeights.size());
+
     for (int i = 0; i < (int) LayerWeights.size(); ++i){
     Neurons.push_back(neuron(LayerWeights[i], LayerBias[i]));
     }
@@ -38,19 +38,19 @@ void layer::setBias(vector<fp> LayerBias){
 
 
 vector<vector<fp> > layer::getWeights(){
-    vector<vector<fp> > tmp;
+    vector<vector<fp> > tmp(Neurons.size());
 
     for(int i = 0; i < (int) Neurons.size(); ++i){
-    tmp.push_back(Neurons[i].getWeights());
+    tmp[i] = Neurons[i].getWeights();
     }
     return tmp;
 }
 
 vector<fp> layer::getBias(){
-    vector<fp> tmp;
+    vector<fp> tmp(Neurons.size());
 
     for(int i = 0; i < (int) Neurons.size(); ++i){
-    tmp.push_back(Neurons[i].getBias());
+    tmp[i] = Neurons[i].getBias();
     }
     return tmp;
 
@@ -63,9 +63,9 @@ int layer::getNumberofNeurons(){
 
 vector<fp> layer::resultFunc(vector<vector<fp> > LayerInputs){
 
-    vector<fp> tmp;
+    vector<fp> tmp(LayerInputs.size());
     for(int i = 0; i < (int) Neurons.size(); ++i){
-    tmp.push_back(Neurons[i].resultFunc(LayerInputs[i]));
+    tmp[i] = Neurons[i].resultFunc(LayerInputs[i]);
     }
     return tmp;
 
@@ -73,9 +73,9 @@ vector<fp> layer::resultFunc(vector<vector<fp> > LayerInputs){
 
 vector<flo> layer::dsigmoid(vector<flo>  LayerInputs){
 
-    vector<flo> tmp;
+    vector<flo> tmp(LayerInputs.size());
     for(int i = 0; i < (int) Neurons.size(); ++i){
-    tmp.push_back(Neurons[i].dsigmoid(LayerInputs[i]));
+    tmp[i] = Neurons[i].dsigmoid(LayerInputs[i]);
     }
     return tmp;
 }
