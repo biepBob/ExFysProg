@@ -11,17 +11,23 @@ neuron::neuron(int size)
         Weights.resize(size);
         for (int i = 0; i < size; i++)
         {
-                random_device rd; //Initializes random engine
-                mt19937 gen(rd()); //Mersenne Twister 19937 generator, rng
-                uniform_real_distribution<flo> dis(0, 1); //uniform probability distribution
-                Weights[i] = dis(gen); //Generate random weights
-                Bias = dis(gen);
+            Weights[i] = rngesus(0,1); //Generate random weights
         }
+        
+        Bias = rngesus(0,1);
 }
 
 
 neuron::~neuron()
 {
+}
+
+
+float neuron::rngesus(flo min, flo max){
+    random_device rd; //Initializes random engine
+    mt19937 gen(rd()); //Mersenne Twister 19937 generator, rng
+    uniform_real_distribution<flo> dis(min, max); //uniform probability distribution
+    return dis(gen);
 }
 
 void neuron::setWeights(vector<fp> w)
