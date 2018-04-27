@@ -61,21 +61,39 @@ int layer::getNumberofNeurons(){
     return Neurons.size();
 }
 
-vector<fp> layer::resultFunc(vector<vector<fp> > LayerInputs){
-
-    vector<fp> tmp(LayerInputs.size());
+vector<fp> layer::resultFunc(vector<fp>  LayerInputs, bool FirstLayer){
+    
+    vector<fp> tmp(Neurons.size());//LayerInputs.size = Neurons.size
+    if(!FirstLayer){//passes the whole input vector to every neuron
     for(int i = 0; i < (int) Neurons.size(); ++i){
-    tmp[i] = Neurons[i].resultFunc(LayerInputs[i]);
+    tmp[i] = Neurons[i].resultFunc(LayerInputs);
+    }
+    }
+    else{//passes the i-th element of the input vector to the i-th neuron
+        for(int i=0; i< (int) Neurons.size(); ++i){
+            //vector<flo> element(1);
+            //element[0] = LayerInputs[i];
+            tmp[i] = Neurons[i].resultFunc({LayerInputs[i]});    
+     }
+
     }
     return tmp;
 
 }
 
-vector<flo> layer::dsigmoid(vector<flo>  LayerInputs){
+vector<flo> layer::dsigmoid(vector<fp>  LayerInputs, bool FirstLayer){
 
-    vector<flo> tmp(LayerInputs.size());
-    for(int i = 0; i < (int) Neurons.size(); ++i){
-    tmp[i] = Neurons[i].dsigmoid(LayerInputs[i]);
+    vector<flo> tmp(LayerInputs.size());//LayerInputs.size = Neurons.size
+    if(!FirstLayer){//passes the whole input vector to every neuron
+        for(int i = 0; i < (int) Neurons.size(); ++i){
+            tmp[i] = Neurons[i].dsigmoid(Neurons[i].activateFunc(LayerInputs));
+        }
+    }
+    else{//passes the i-th element of the input vector to the i-th neuron
+        for(int i=0; i< (int) Neurons.size(); ++i){
+            tmp[i] = Neurons[i].dsigmoid(Neurons[i].activateFunc({LayerInputs[i]}));    
+        }
+
     }
     return tmp;
 }

@@ -15,9 +15,9 @@ public :
     vector<fp> getBias(); //get-function to provide access to bias
     int getNumberofNeurons(); //get-function to provide acces to number of neurons
 
-    vector<fp> resultFunc(vector<vector<fp> > LayerInputs); //calculates the output
-    void operator()(vector<vector<fp> > LayerInputs){ resultFunc(LayerInputs);}
-    vector<flo> dsigmoid(vector<flo>  LayerInputs); //calculates the derivative of sigmoid
+    vector<fp> resultFunc(vector<fp>  LayerInputs, bool FirstLayer); //calculates the output vector of the layer. Use FirstLayer true or false (or 1/0) to determine wheter it's the first layer or not. Depending on the value the inputs will be passed to the neuron in a different way.
+    vector<fp>  operator()(vector<fp>  LayerInputs, bool FirstLayer){ return resultFunc(LayerInputs,FirstLayer);}
+    vector<flo> dsigmoid(vector<fp>  LayerInputs,bool FirstLayer); //calculates the derivative of sigmoid
 protected :
     vector<neuron> Neurons;
     int NumberofNeurons;

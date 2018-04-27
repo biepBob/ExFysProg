@@ -25,7 +25,7 @@ public:
 	flo dsigmoid(flo); //Derivative Sigmoid function
 	flo activateFunc(vector <fp>); //Activate function, calls sigmoid
 	fp resultFunc(vector <fp>); //Calculates the neuron output, calls activateFunc
-	void operator()(vector<fp> inputs) { resultFunc(inputs); } //Overloading ()
+	fp  operator()(vector<fp> inputs) { return resultFunc(inputs); } //Overloading ()
 protected:
 	vector<flo> Weights;
 	flo Bias;
