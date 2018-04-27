@@ -22,6 +22,25 @@ neuron::~neuron()
 {
 }
 
+neuron::neuron(const neuron &n1){
+    Weights = n1.Weights;
+    Bias = n1.Bias;
+    Output = n1.Output;
+}
+
+neuron& neuron::operator = (const neuron &otherNeuron){
+
+    if( &otherNeuron != this){
+        Weights = otherNeuron.Weights;
+        Bias = otherNeuron.Bias;
+        Output = otherNeuron.Output;
+    }
+}
+
+
+
+
+
 
 float neuron::rngesus(flo min, flo max){
     random_device rd; //Initializes random engine
