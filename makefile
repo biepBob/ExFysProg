@@ -1,8 +1,3 @@
-#Jago Coric
-#s0140128
-#makefile
-#Due date: 30/03/2018
-
 SHELL = /bin/bash
 #Compiler
 COMPILER = g++ -g -std=c++11 -Wall
