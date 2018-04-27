@@ -5,8 +5,8 @@ class layer{
     //typedef float* fp;
     //typedef float flo;
 public :
-    layer(vector<vector<fp> > LayerWeights, vector<fp>  LayerBias); //Constructor1, weights provided, use this when parameters are loaded from a file
-    layer(int nNeurons, int nInputs); //Constructor2, number of neurons and inputs provided, use this for initialization
+    layer(vector<vector<fp> > LayerWeights, vector<fp>  LayerBias, bool firstLayer); //Constructor1, weights provided, use this when parameters are loaded from a file
+    layer(int nNeurons, int nInputs, bool firstLayer); //Constructor2, number of neurons and inputs provided, use this for initialization
     ~layer();
     layer(const layer &layer1); //Copy constructor
     layer& operator = (const layer &otherLayer);
@@ -17,8 +17,8 @@ public :
     vector<fp> getBias(); //get-function to provide access to bias
     int getNumberofNeurons(); //get-function to provide acces to number of neurons
 
-    vector<fp> resultFunc(vector<fp>  LayerInputs, bool FirstLayer); //calculates the output vector of the layer. Use FirstLayer true or false (or 1/0) to determine wheter it's the first layer or not. Depending on the value the inputs will be passed to the neuron in a different way.
-    vector<fp>  operator()(vector<fp>  LayerInputs, bool FirstLayer){ return resultFunc(LayerInputs,FirstLayer);}
+    vector<fp> resultFunc(vector<fp>  LayerInputs); //calculates the output vector of the layer. Use FirstLayer true or false (or 1/0) to determine wheter it's the first layer or not. Depending on the value the inputs will be passed to the neuron in a different way.
+    vector<fp>  operator()(vector<fp>  LayerInputs){ return resultFunc(LayerInputs);}
     vector<flo> dsigmoid(vector<fp>  LayerInputs); //calculates the derivative of sigmoid
 protected :
     vector<neuron> Neurons;

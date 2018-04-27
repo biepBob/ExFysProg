@@ -11,7 +11,7 @@ int main() {
 try{
     int nneuron = 150;
     int ninputs = 728;
-    layer tost(nneuron,ninputs); //constructor2 for initialization
+    layer tost(nneuron,ninputs,false); //constructor2 for initialization
     layer tast = tost;
     layer tust = layer(tast);
 
@@ -63,7 +63,7 @@ try{
         *tost.getWeights()[0][0]; //output weights
         input.resize(nneuron-1); //this will shorten the input vector to test if the exception handling in resultFunc works, remove -1 to make it work
         
-        *tost.resultFunc(input,false)[0]; //neuron output
+        *tost.resultFunc(input)[0]; //neuron output
     
         //optional cout
         //cout << "nrUpdated Weight(0,0): " << *tost.getWeights()[0][0] << endl;

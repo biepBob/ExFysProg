@@ -1,6 +1,8 @@
 #include "NeuronLayer.h"
 
-layer::layer(vector<vector<fp> > LayerWeights, vector<fp> LayerBias){
+layer::layer(vector<vector<fp> > LayerWeights, vector<fp> LayerBias, bool firstLayer){
+    FirstLayer = firstLayer; //sets the value for FirstLayer for further use in resultFunc and dsigmoid
+
     //argument check
     if (LayerWeights.size() != LayerBias.size()){
         throw std::invalid_argument("\n layer::layer1: dimension mismatch\n");
@@ -18,7 +20,8 @@ layer::layer(vector<vector<fp> > LayerWeights, vector<fp> LayerBias){
 }
 
 
-layer::layer(int nNeurons, int nWeights){//in every layer each neuron has the same amount of inputs and thus the same amount of weights
+layer::layer(int nNeurons, int nWeights, bool firstLayer){//in every layer each neuron has the same amount of inputs and thus the same amount of weights
+    FirstLayer = firstLayer;
 
     if(nNeurons <= 0 || nWeights <= 0) {
         throw std::invalid_argument("\nlayer::layer2: invalid argument, argument must be of type int.\n");
@@ -99,9 +102,8 @@ int layer::getNumberofNeurons(){
     return Neurons.size();
 }
 
-vector<fp> layer::resultFunc(vector<fp>  LayerInputs, bool firstLayer){
+vector<fp> layer::resultFunc(vector<fp>  LayerInputs){
 
-    FirstLayer = firstLayer; //sets the value for FirstLayer for further use in dsigmoid
 
     vector<fp> tmp(Neurons.size());//LayerInputs.size = Neurons.size
 
