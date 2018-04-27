@@ -5,7 +5,7 @@ class layer{
     //typedef float* fp;
     //typedef float flo;
 public :
-    layer(vector<vector<fp> > LayerWeights, vector<fp>  LayerBias); //Constructor1, weights provided, use this for updating
+    layer(vector<vector<fp> > LayerWeights, vector<fp>  LayerBias); //Constructor1, weights provided, use this when parameters are loaded from a file
     layer(int nNeurons, int nInputs); //Constructor2, number of neurons and inputs provided, use this for initialization
     ~layer();
     layer(const layer &layer1); //Copy constructor
