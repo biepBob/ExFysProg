@@ -35,13 +35,13 @@ void neuron::setWeights(vector<fp> w)
         Weights.resize(w.size());
 	for (int i = 0; i < (int) w.size(); i++)
 	{
-		Weights[i] = *w[i];
+		Weights[i] = w[i]; //noptr
 	}
 }
 
 void neuron::setBias(fp b)
 {
-        Bias = *b;
+        Bias = b; //noptr
 }
 
 vector<fp> neuron::getWeights()
@@ -49,14 +49,14 @@ vector<fp> neuron::getWeights()
     vector<fp> TempWeights(Weights.size());
     for (int i = 0; i < (int) Weights.size(); i++)
 	{
-		TempWeights[i] = &Weights[i];
+		TempWeights[i] = Weights[i]; //noptr
 	}
     return TempWeights;
 }
 
 fp neuron::getBias()
 {
-        return &Bias;
+        return Bias; //noptr
 }
 
 const int neuron::getNumberOfInputs()
@@ -79,7 +79,7 @@ flo neuron::activateFunc(vector<fp> input)
         flo temp = 0;
         for (int i = 0; i < (int) input.size(); i++) 
         {
-                temp += Weights[i] * *input[i]; //w.x dot product
+                temp += Weights[i] * input[i]; //w.x dot product //noptr
         }
         temp += Bias;
         return temp;
@@ -88,6 +88,6 @@ flo neuron::activateFunc(vector<fp> input)
 fp neuron::resultFunc(vector<fp> input) 
 {
         Output = sigmoid(activateFunc(input));
-        return  &Output;
+        return  Output; //noptr
 }
 

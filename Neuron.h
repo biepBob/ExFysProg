@@ -6,7 +6,7 @@
 
 using namespace std;
 
-typedef float* fp;
+typedef float fp; //noptr
 typedef float flo;
 
 class neuron{

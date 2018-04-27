@@ -7,6 +7,8 @@ flo rng(flo min, flo max){
     return dis(gen);
 }
 int main() {
+    typedef float fp;//noptr
+    typedef float flo;
 
 int nneuron = 150;
 int ninputs = 728;
@@ -36,20 +38,22 @@ vector<fp> tmp2;
     for( int i = 0; i < (int) w.size(); ++i){
         for(int  j = 0; j < (int) w[i].size(); ++j){
             w[i][j] = rng(-1,1);
-            tmp[j] = &(w[i][j]);
+            tmp[j] = (w[i][j]); //noptr
         }
     ww[i] = tmp;
     in[i] = rng(-1,1);
-    input[i] =  &in[i];
+    input[i] =  in[i];//noptr
     b[i] = rng(-1,1);
-    bb[i] = &b[i];
+    bb[i] = b[i];//noptr
     }
 
     //update the parameters
     tost.setWeights(ww); //update weights
     tost.setBias(bb); //update bias
-    *tost.getWeights()[0][0]; //output weights
-    *tost.resultFunc(input,false)[0]; //neuron output
+    
+    //noptr
+    //*tost.getWeights()[0][0]; //output weights
+    //*tost.resultFunc(input,false)[0]; //neuron output
     
     //optional cout
     //cout << "nrUpdated Weight(0,0): " << *tost.getWeights()[0][0] << endl;
