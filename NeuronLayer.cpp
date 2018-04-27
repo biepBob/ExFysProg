@@ -50,6 +50,7 @@ layer& layer::operator = (const layer &otherLayer){
     NumberofInputs = otherLayer.NumberofInputs;
     FirstLayer = otherLayer.FirstLayer;       
     }
+    return *this;
 }
 
 void layer::setWeights(vector<vector<fp> > LayerWeights){

@@ -35,6 +35,7 @@ neuron& neuron::operator = (const neuron &otherNeuron){
         Bias = otherNeuron.Bias;
         Output = otherNeuron.Output;
     }
+    return *this;
 }
 
 
