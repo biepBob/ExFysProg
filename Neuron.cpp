@@ -9,11 +9,8 @@ neuron::neuron(vector<flo> weights,flo bias) //constructor 1
 neuron::neuron(int size) //constructor 2
 {
         Weights.resize(size);
-        vector<flo>::iterator it;
-        for (it = Weights.begin(); it != Weights.end(); ++it)
-        {
-            *it = rngesus(0,1); //Generate random weights
-        }
+
+        std::generate(Weights.begin(),Weights.end(), [&]()-> flo {return rngesus(-1,1);});
         
         Bias = rngesus(0,1);
 }
