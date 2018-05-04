@@ -1,6 +1,6 @@
 #include "Neuron.h"
 
-neuron::neuron(vector<fp> weights,fp bias)
+neuron::neuron(vector<flo> weights,flo bias)
 {
         setWeights(weights);
         setBias(bias);
@@ -9,9 +9,10 @@ neuron::neuron(vector<fp> weights,fp bias)
 neuron::neuron(int size)
 {
         Weights.resize(size);
-        for (int i = 0; i < size; i++)
+        vector<flo>::iterator it;
+        for (it = Weights.begin(); it != Weights.end(); ++it)
         {
-            Weights[i] = rngesus(0,1); //Generate random weights
+            *it = rngesus(0,1); //Generate random weights
         }
         
         Bias = rngesus(0,1);
@@ -28,6 +29,7 @@ neuron::neuron(const neuron &n1){
     Output = n1.Output;
 }
 
+
 neuron& neuron::operator = (const neuron &otherNeuron){
 
     if( &otherNeuron != this){
@@ -39,10 +41,6 @@ neuron& neuron::operator = (const neuron &otherNeuron){
 }
 
 
-
-
-
-
 float neuron::rngesus(flo min, flo max){
     random_device rd; //Initializes random engine
     mt19937 gen(rd()); //Mersenne Twister 19937 generator, rng
@@ -50,33 +48,30 @@ float neuron::rngesus(flo min, flo max){
     return dis(gen);
 }
 
-void neuron::setWeights(vector<fp> w)
+
+void neuron::setWeights(vector<flo> w)
 {
-        Weights.resize(w.size());
-	for (int i = 0; i < (int) w.size(); i++)
-	{
-		Weights[i] = *w[i];
-	}
+    //Weights.resize(w.size());
+    //std::transform(w.begin(),w.end(),Weights.begin(), [](fp in) -> flo {return *in;});
+   Weights = w; 
+    //for (int i = 0; i < (int) w.size(); i++){
+	    //Weights.at(i) = *w.at(i);
+    //}
 }
 
-void neuron::setBias(fp b)
+void neuron::setBias(flo b)
 {
-        Bias = *b;
+        Bias = b;
 }
 
-vector<fp> neuron::getWeights()
+vector<flo> neuron::getWeights()
 {
-    vector<fp> TempWeights(Weights.size());
-    for (int i = 0; i < (int) Weights.size(); i++)
-	{
-		TempWeights[i] = &Weights[i];
-	}
-    return TempWeights;
+    return Weights;
 }
 
-fp neuron::getBias()
+flo neuron::getBias()
 {
-        return &Bias;
+        return Bias;
 }
 
 const int neuron::getNumberOfInputs()
@@ -97,17 +92,15 @@ flo neuron::dsigmoid(flo z)
 flo neuron::activateFunc(vector<fp> input)
 {
         flo temp = 0;
-        for (int i = 0; i < (int) input.size(); i++) 
-        {
-                temp += Weights[i] * *input[i]; //w.x dot product
-        }
-        temp += Bias;
+        vector<flo> buff(input.size());
+            std::transform(input.begin(),input.end(),buff.begin(),[](fp in) -> flo {return *in;}); //converts input, a vector of ptrs to buff, a vector of floats
+            temp = std::inner_product(Weights.begin(),Weights.end(),buff.begin(), Bias); //std algorithm to calculate the inner product, i.e. sum of products
         return temp;
 }
 
-fp neuron::resultFunc(vector<fp> input) 
+flo neuron::resultFunc(vector<fp> input) 
 {
-        Output = sigmoid(activateFunc(input));
-        return  &Output;
+    Output = sigmoid(activateFunc(input));
+        return  Output;
 }
 
