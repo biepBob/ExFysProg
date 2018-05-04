@@ -10,7 +10,7 @@ neuron::neuron(int size) //constructor 2
 {
         Weights.resize(size);
 
-        std::generate(Weights.begin(),Weights.end(), [&]()-> flo {return rngesus(-1,1);});
+        std::generate(Weights.begin(),Weights.end(), [&]()-> flo {return rngesus(-1,1);}); //generates random weights using algorithms and lambda function
         
         Bias = rngesus(0,1);
 }
