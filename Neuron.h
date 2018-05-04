@@ -4,6 +4,7 @@
 #include<vector>
 #include<algorithm>
 #include<random>
+#include<numeric>
 
 using namespace std;
 
@@ -34,5 +35,4 @@ protected:
 	flo Bias;
         flo Output;
 
-        //flo deref(fp in);
 };
