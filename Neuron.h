@@ -25,14 +25,15 @@ public:
 	vector<flo> getWeights(); //get-function to access weights
 	flo getBias(); //get-function to access bias
 	const int getNumberOfInputs(); //get-function to access #inputs = size of Weights
-	flo sigmoid(flo); //Sigmoid function
-	flo dsigmoid(flo); //Derivative Sigmoid function
-	flo activateFunc(vector <fp>); //Activate function, calls sigmoid
-	flo resultFunc(vector <fp>); //calculates the neuron output, calls activateFunc
-	flo  operator()(vector<fp> inputs) { return resultFunc(inputs); } //Overloading ()
+	fp sigmoid(fp); //Sigmoid function
+	fp dsigmoid(fp); //Derivative Sigmoid function
+	fp activateFunc(vector <fp>); //Activate function, calls sigmoid
+	fp resultFunc(vector <fp>); //calculates the neuron output, calls activateFunc
+	fp  operator()(vector<fp> inputs) { return resultFunc(inputs); } //Overloading ()
+
+        flo Output;
 protected:
 	vector<flo> Weights;
 	flo Bias;
-        flo Output;
 
 };

@@ -107,21 +107,20 @@ int layer::getNumberofNeurons(){ //the number of neurons in the layer
     return Neurons.size();
 }
 
-vector<flo> layer::resultFunc(vector<fp>  LayerInputs){//calculates the output for each neuron in the layer
+vector<fp> layer::resultFunc(vector<fp>  LayerInputs){//calculates the output for each neuron in the layer
 //LayerInputs.size = LayerWeights[i].size() = #neurons in the previous layer
 
-    vector<flo> tmp(Neurons.size()); //temporary vector to store data
+    vector<fp> tmp(Neurons.size()); //temporary vector to store data
 
     //test if it's the first layer 
     if(FirstLayer){//passes the i-th element of the input vector to the i-th neuron
-
         if(LayerInputs.size() != Neurons.size()){
             throw std::invalid_argument("\nlayer::resultFunc: dimension mismatch\n");
         }
 
         int index = 0; //indexer to access vector elements inside lambda function
         //lamda function: [capture1,...] (type1,...) -> type {code} : executes the code inside {} and returns a value of type 'type'. () contains the type of input parameters for the code. [] contains the variables that the lambda can capture from outside its scope. In this case it can capture the index.
-        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {return  Neurons.at(index).resultFunc({LayerInputs.at(index++)});});
+        std::transform(Neurons.begin(),Neurons.end(),tmp.begin(), [&](neuron &Neuron) -> fp {return  Neuron.resultFunc({LayerInputs.at(index++)});});
         
     }
     //for other layers than the first
@@ -151,7 +150,7 @@ vector<flo> layer::dsigmoid(vector<fp>  LayerInputs){
         }
 
         int index = 0;
-        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {return  Neurons.at(index).dsigmoid(Neurons.at(index).activateFunc({LayerInputs.at(index++)}));});
+        std::transform(Neurons.begin(),Neurons.end(),tmp.begin(), [&](neuron &Neuron){ vector<fp> in = {LayerInputs.at(index++)}; fp t = Neuron.activateFunc(in); return  *Neuron.dsigmoid(t);});
     }
 
     //for other layers than the first
@@ -161,7 +160,7 @@ vector<flo> layer::dsigmoid(vector<fp>  LayerInputs){
             throw std::invalid_argument("\nlayer::dsigmoid: dimension mismatch\n");
         }
 
-        std::transform(Neurons.begin(),Neurons.end(), tmp.begin(), [&](neuron &Neuron){return Neuron.dsigmoid(Neuron.activateFunc(LayerInputs));});
+        std::transform(Neurons.begin(),Neurons.end(), tmp.begin(), [&](neuron &Neuron){return *Neuron.dsigmoid(Neuron.activateFunc(LayerInputs));});
 
         }
 

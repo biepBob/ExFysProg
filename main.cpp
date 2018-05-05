@@ -12,10 +12,10 @@ int main() {
 
 try{
     int nneuron = 150; //number of neurons
-    int ninputs = 728; //number of inputs per neuron
+    int ninputs = 150; //number of inputs per neuron
     
     //copy constructor and assignment operator test
-    layer tost(nneuron,ninputs,false); //constructor2 for initialization
+    layer tost(nneuron,ninputs,true); //constructor2 for initialization
     layer tast = tost;
     layer tust = layer(tast);
     layer tist = layer(2,2);
@@ -50,15 +50,7 @@ try{
         std::generate(input.begin(),input.end(),[&](){return &x;});
         std::generate(b.begin(),b.end(),[&](){return rng(-1,1);});
 
-        //for( int i = 0; i < (int) w.size(); ++i){
-            //for(int  j = 0; j < (int) w[i].size(); ++j){
-                //w[i][j] = rng(-1,1);
-                //in[j] = &x; //rng(-1,1); //if you want to randomize the input values though it induces a performance hit
-
-                //input[j] =  &x;//in[j];
-            //}
-        //b[i] = rng(-1,1);
-        //}
+        
         //update the parameters
         tost.setWeights(w); //update weights
         tost.setBias(b); //update bias
@@ -68,7 +60,7 @@ try{
         //cout<< "weights2 " <<tost.getWeights()[0][1]<<endl;
         //cout<< "weights3 " <<tost.getWeights()[1][0]<<endl;
         //cout<< "bias " <<tost.getBias()[0]<<endl;
-        cout<< "result " <<tost.resultFunc(input)[0] <<endl; //neuron output
+        cout<< "result " <<*tost.resultFunc(input)[0] <<endl; //neuron output
         cout<< "dsigma " <<tost.dsigmoid(input)[0] <<endl; //dsigmoid output
  
     }

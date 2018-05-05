@@ -71,30 +71,34 @@ const int neuron::getNumberOfInputs()
         return Weights.size(); //returns the number of inputs for a neuron
 }
 
-flo neuron::sigmoid(flo z)
+fp neuron::sigmoid(fp z)
 {
-        return 1 / (1 + exp(-z)); //sigmoid function
+        *z =  1 / (1 + exp(-*z)); //sigmoid function
+        return z;
 } 
 
-flo neuron::dsigmoid(flo z)
+fp neuron::dsigmoid(fp z)
 {
-        return sigmoid(z)*(1 - sigmoid(z)); //sigmoid derivative
+    float temp = *sigmoid(z);
+    *z = temp*(1- temp);
+    return z; //sigmoid derivative
+
 }
 
-flo neuron::activateFunc(vector<fp> input)
+fp neuron::activateFunc(vector<fp> input)
 {
-        flo temp = 0; //temporary vector to store output
+        //flo tmp; //temporary vector to store output
         vector<flo> buff(input.size()); //temporary vector to store transformed elements
             std::transform(input.begin(),input.end(),buff.begin(),[](fp in) -> flo {return *in;}); //converts input, a vector of ptrs to buff, a vector of floats
             //last argument is a lambda function. It takes input of type fp and sends it to code in {} to return a flo
 
-            temp = std::inner_product(Weights.begin(),Weights.end(),buff.begin(), Bias); //std algorithm to calculate the inner product, i.e. sum of products
-        return temp;
+            Output = std::inner_product(Weights.begin(),Weights.end(),buff.begin(), Bias); //std algorithm to calculate the inner product, i.e. sum of products
+        return &Output;
 }
 
-flo neuron::resultFunc(vector<fp> input) //calculates the output of a neuron
+fp neuron::resultFunc(vector<fp> input) //calculates the output of a neuron
 {
-    Output = sigmoid(activateFunc(input));
-        return  Output;
+    Output = *sigmoid(activateFunc(input));
+        return  &Output;
 }
 
