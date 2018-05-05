@@ -11,10 +11,11 @@ layer::layer(vector<vector<flo> > LayerWeights, vector<flo> LayerBias, bool firs
     NumberofNeurons = LayerWeights.size(); //#neurons = size of LayerWeights
     NumberofInputs = LayerWeights.at(0).size(); //Because it is a priori known that every neuron takes an equal amount of inputs
 
+
+
     for (int i = 0; i < (int) LayerWeights.size(); ++i){ //creates a vector of neurons using neuron/constructor2
     Neurons.push_back(neuron(LayerWeights.at(i), LayerBias.at(i))); //using iterators here is impractical, though we might fix it in future versions
     }
-
 
                 
 }
@@ -60,13 +61,15 @@ void layer::setWeights(vector<vector<flo> > LayerWeights){
         throw std::invalid_argument("\nlayer::setWeights: dimension mismatch\n");
     }
 
-    //experimenting with algorithms and lambda functions, not working atm so ignore it
-    //size_t index = 0;
-    //std::transform(LayerWeights.begin(),LayerWeights.end(), Neurons.begin(), [&](vector<flo>  lw)  {(Neurons.at(index)).setWeights(lw); ++index;});
+    int index = 0;
+    std::for_each(Neurons.begin(),Neurons.end(), [&](neuron &Neuron){Neuron.setWeights(LayerWeights.at(index++));});
+    //[&]: lambda function needs access to elements outside its scope: index and LayerWeights
+    //(neuron &Neuron): for_each does something similar to f(*iterator), with f being the function from the last argument and iterator the current iterator of the container in the first argument. *iterator is thus an object of type neuron that will be used as input for the lambda function
+    //{Neuron.setWeights(...)} will call neuron::setWeights on the provided Neuron
+    //f(i++) = f(i); ++i;
+    //f(++i) = ++i; f(i); this may cause an 'out_of_range' error in f
+    //f(i++); h(i)  = f(i); ++i; h(i); this may cause an 'out_of_range' error in h, prevent it by only doing i++ in the function that will be called last
 
-    for(vector<neuron>::iterator it = Neurons.begin(); it != Neurons.end(); ++it){
-        (*it).setWeights(LayerWeights.at(it-Neurons.begin())); //it-Neurons.begin() is way to calculate the integer index corresponding to the current  iterator
-    }
 }
 
 void layer::setBias(vector<flo> LayerBias){ //sets bias for every neuron
@@ -75,11 +78,8 @@ void layer::setBias(vector<flo> LayerBias){ //sets bias for every neuron
         throw std::invalid_argument("\nlayer::setBias: dimension mismatch\n");
     }
     
-
-    for(vector<neuron>::iterator it = Neurons.begin(); it != Neurons.end(); ++it){
-        (*it).setBias(LayerBias.at(it - Neurons.begin()));
-    }
-
+    int index = 0;
+    std::for_each(Neurons.begin(),Neurons.end(), [&](neuron &Neuron){Neuron.setBias(LayerBias.at(index++));});
 }
 
 
@@ -87,18 +87,16 @@ void layer::setBias(vector<flo> LayerBias){ //sets bias for every neuron
 vector<vector<flo> > layer::getWeights(){ //gets the weights from every neuron
 
     vector<vector<flo> > tmp(Neurons.size()); //temporary vector to store data
-    int count = 0;
-
-    std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](vector<flo>) -> vector<flo> { vector<flo> temp = Neurons.at(count).getWeights(); ++count; return temp;}); //std algorithm that transforms empty tmp to tmp filled with weight vectors
+    
+    std::transform(Neurons.begin(),Neurons.end(),tmp.begin(),[&](neuron &Neuron){return Neuron.getWeights();}); //std algorithm that transforms empty tmp to tmp filled with weight vectors
 
     return tmp;
 }
 
 vector<flo> layer::getBias(){ //gets the bias from every neuron
     vector<flo> tmp(Neurons.size());
-    int count = 0;
 
-    std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo { flo temp = Neurons.at(count).getBias(); ++count; return temp;});
+    std::transform(Neurons.begin(),Neurons.end(),tmp.begin(),[&](neuron &Neuron){return Neuron.getBias();});
 
     return tmp;
 
@@ -121,29 +119,23 @@ vector<flo> layer::resultFunc(vector<fp>  LayerInputs){//calculates the output f
             throw std::invalid_argument("\nlayer::resultFunc: dimension mismatch\n");
         }
 
-        int count = 0; //counter to access vector elements inside lambda function
-        //lamda function: [capture1,...] (type1,...) -> type {code} : executes the code inside {} and returns a value of type 'type'. () contains the type of input parameters for the code. [] contains the variables that the lambda can capture from outside its scope. In this case it can capture the count.
-        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {flo temp = Neurons.at(count).resultFunc({LayerInputs.at(count)}); ++count; return temp; });
-
+        int index = 0; //indexer to access vector elements inside lambda function
+        //lamda function: [capture1,...] (type1,...) -> type {code} : executes the code inside {} and returns a value of type 'type'. () contains the type of input parameters for the code. [] contains the variables that the lambda can capture from outside its scope. In this case it can capture the index.
+        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {return  Neurons.at(index).resultFunc({LayerInputs.at(index++)});});
         
     }
     //for other layers than the first
     else{//passes the whole input vector to every neuron
-
 
         if(LayerInputs.size() != getWeights()[0].size()){
             //[0] because it's a priori known that every sub vector in LayerWeights will be the same size. If that's not the case it needs to be placed in the for loop.
             throw std::invalid_argument("\nlayer::resultFunc: dimension mismatch\n");
         }
 
-        int count = 0;
-        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {flo temp = Neurons.at(count).resultFunc(LayerInputs); ++count; return temp; });
-
+        std::transform(Neurons.begin(),Neurons.end(),tmp.begin(),[&](neuron &Neuron){return Neuron.resultFunc(LayerInputs);});
 
     }
-    
     return tmp;
-
 }
 
 vector<flo> layer::dsigmoid(vector<fp>  LayerInputs){
@@ -158,10 +150,8 @@ vector<flo> layer::dsigmoid(vector<fp>  LayerInputs){
             throw std::invalid_argument("\nlayer::dsigmoid: dimension mismatch\n");
         }
 
-        int count = 0;
-        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {flo temp = Neurons.at(count).dsigmoid(Neurons.at(count).activateFunc({LayerInputs.at(count)})); ++count; return temp; });
-
-
+        int index = 0;
+        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {return  Neurons.at(index).dsigmoid(Neurons.at(index).activateFunc({LayerInputs.at(index++)}));});
     }
 
     //for other layers than the first
@@ -171,9 +161,7 @@ vector<flo> layer::dsigmoid(vector<fp>  LayerInputs){
             throw std::invalid_argument("\nlayer::dsigmoid: dimension mismatch\n");
         }
 
-
-        int count = 0;
-        std::transform(tmp.begin(),tmp.end(),tmp.begin(), [&](flo) -> flo {flo temp = Neurons.at(count).dsigmoid(Neurons.at(count).activateFunc(LayerInputs)); ++count; return temp; });
+        std::transform(Neurons.begin(),Neurons.end(), tmp.begin(), [&](neuron &Neuron){return Neuron.dsigmoid(Neuron.activateFunc(LayerInputs));});
 
         }
 

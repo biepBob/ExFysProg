@@ -10,9 +10,9 @@ neuron::neuron(int size) //constructor 2
 {
         Weights.resize(size);
 
-        std::generate(Weights.begin(),Weights.end(), [&]()-> flo {return rngesus(-1,1);}); //generates random weights using algorithms and lambda function
+        std::generate(Weights.begin(),Weights.end(),[&](){return rngesus(-1,1);}); //generates random weights using algorithms and lambda function
         
-        Bias = rngesus(0,1);
+        Bias = rngesus(-1,1);
 }
 
 
@@ -38,7 +38,7 @@ neuron& neuron::operator = (const neuron &otherNeuron){ //assignment operator
 }
 
 
-float neuron::rngesus(flo min, flo max){ //random number generator
+flo neuron::rngesus(flo min, flo max){ //random number generator
     random_device rd; //Initializes random engine
     mt19937 gen(rd()); //Mersenne Twister 19937 generator, rng
     uniform_real_distribution<flo> dis(min, max); //uniform probability distribution

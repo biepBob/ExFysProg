@@ -11,8 +11,8 @@ int main() {
 
 
 try{
-    int nneuron = 10; //number of neurons
-    int ninputs = 15; //number of inputs per neuron
+    int nneuron = 150; //number of neurons
+    int ninputs = 728; //number of inputs per neuron
     
     //copy constructor and assignment operator test
     layer tost(nneuron,ninputs,false); //constructor2 for initialization
@@ -23,8 +23,10 @@ try{
     cout << tost.getWeights()[0][0] << endl;
     cout << tast.getWeights()[0][0] << endl;
     cout << tust.getWeights()[0][0] << endl;
-
-
+    
+    float x = 1;    
+    float y = 0;    
+    
 
     //performance test setup
     
@@ -36,28 +38,38 @@ try{
         vector<flo> b(nneuron);
         vector<flo> in(ninputs);
         
-    float x = 1;    
 
-    for(int k = 0; k < 1; ++k){
+    for(int k = 0; k < 100; ++k){
 
         //convert the vectors of flos to vectors of pointers
-        for( int i = 0; i < (int) w.size(); ++i){
-            for(int  j = 0; j < (int) w[i].size(); ++j){
-                w[i][j] = rng(-1,1);
+        //these algorithms replace the loops from previous version
+        std::for_each(w.begin(),w.end(),[&](vector<flo> &subw){
+                std::generate(subw.begin(),subw.end(),[&](){return rng(-1,1);});
+        });
+
+        std::generate(input.begin(),input.end(),[&](){return &x;});
+        std::generate(b.begin(),b.end(),[&](){return rng(-1,1);});
+
+        //for( int i = 0; i < (int) w.size(); ++i){
+            //for(int  j = 0; j < (int) w[i].size(); ++j){
+                //w[i][j] = rng(-1,1);
                 //in[j] = &x; //rng(-1,1); //if you want to randomize the input values though it induces a performance hit
 
-                input[j] =  &x;//in[j];
-            }
-        b[i] = rng(-1,1);
-        }
-
+                //input[j] =  &x;//in[j];
+            //}
+        //b[i] = rng(-1,1);
+        //}
         //update the parameters
         tost.setWeights(w); //update weights
         tost.setBias(b); //update bias
         tost.getWeights()[0][0]; //output weights
         
-        cout<< tost.resultFunc(input)[0] <<endl; //neuron output
-        cout<< tost.dsigmoid(input)[0] <<endl; //dsigmoid output
+        //cout<< "weights " <<tost.getWeights()[0][0]<<endl;
+        //cout<< "weights2 " <<tost.getWeights()[0][1]<<endl;
+        //cout<< "weights3 " <<tost.getWeights()[1][0]<<endl;
+        //cout<< "bias " <<tost.getBias()[0]<<endl;
+        cout<< "result " <<tost.resultFunc(input)[0] <<endl; //neuron output
+        cout<< "dsigma " <<tost.dsigmoid(input)[0] <<endl; //dsigmoid output
  
     }
 
